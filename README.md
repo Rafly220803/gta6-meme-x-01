@@ -1,4 +1,4 @@
-# gta6-meme-x-01 — "12 YEARS OF WAITING"
+# gta6-meme-x-01 — "LAUNCH DAY STARTER PACK"
 
 An entry for the make.fun bounty **Post a GTA 6 meme on X**: a GTA VI
 launch-week meme whose picture carries the make.fun ghost, posted on X from
