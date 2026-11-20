@@ -22,8 +22,11 @@ an open PS5 case with an empty hub + code card, xQc, Kai Cenat (Streamy
 Awards), a home router, Auckland at night, a sick man with a thermometer,
 a cemetery, a phone face-down on a desk. Captions carry American/gaming
 slang; every gag is anchored to RESEARCH.md. The make.fun ghost (real
-press mark) is large in every hero and in every footer, with make.fun
-written big. All 1024x1280, fixed constants, deterministic.
+press mark) appears in every hero and footer, with make.fun written
+big; in G v2 the ghost is integrated as a disc-less cutout — climbing
+out of the hero key art, tucked under the launch-status chip, and
+standing in the black footer — instead of a pasted-on badge. All
+1024x1280, fixed constants, deterministic.
 
 Usage: python3 build_meme5.py   (writes meme8.png, meme9.png, meme10.png)
 """
@@ -31,6 +34,7 @@ Usage: python3 build_meme5.py   (writes meme8.png, meme9.png, meme10.png)
 import math
 import os
 
+import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 from build_meme import FONT_BOLD
@@ -96,6 +100,22 @@ def paste_ghost(img, cx, cy, h):
     img.paste(mark, (cx - h // 2, cy - h // 2), mask)
 
 
+def paste_ghost_cutout(img, cx, cy, h):
+    """Paste ONLY the ghost from the press mark — magenta disc removed —
+    so the mascot sits inside the layout as a character, not a badge."""
+    mark = Image.open(MARK).convert("RGB")
+    a = np.asarray(mark).astype(int)
+    side = mark.width
+    yy, xx = np.mgrid[0:side, 0:side]
+    in_disc = (xx - side / 2) ** 2 + (yy - side / 2) ** 2 <= (side * 0.41) ** 2
+    magenta = (a[..., 0] - a[..., 1] > 70) & (a[..., 0] > 110) & (a[..., 1] < 130)
+    alpha = np.where(in_disc & ~magenta, 255, 0).astype("uint8")
+    cut = mark.convert("RGBA")
+    cut.putalpha(Image.fromarray(alpha, "L"))
+    cut = cut.resize((h, h), Image.LANCZOS)
+    img.paste(cut, (cx - h // 2, cy - h // 2), cut)
+
+
 def cover(img, name, box, focus=(0.5, 0.5)):
     """Paste photo `name` cover-cropped into box, centred on focus."""
     im = Image.open(os.path.join(PHOTOS, name)).convert("RGB")
@@ -114,11 +134,14 @@ def photo(img, d, name, box, focus=(0.5, 0.5), outline=(0, 0, 0), width=2):
     d.rectangle(box, outline=outline, width=width)
 
 
-def footer(img, y0):
+def footer(img, y0, ghost="disc"):
     """Shared black footer: ghost + the agent pitch, make.fun big."""
     d = ImageDraw.Draw(img)
     d.rectangle([0, y0, W, H], fill=BLACK)
-    paste_ghost(img, 72, (y0 + H) // 2, 88)
+    if ghost == "cutout":
+        paste_ghost_cutout(img, 72, (y0 + H) // 2, 88)
+    else:
+        paste_ghost(img, 72, (y0 + H) // 2, 88)
     d = ImageDraw.Draw(img)
     ltext(d, 140, y0 + 16, "MY AI AGENT SKIPPED ALL OF IT", 25, WHITE,
           maxw=860)
@@ -174,7 +197,7 @@ def build_g():
     ltext(d, 28, 370, "4,811 days after GTA V · PS5 + Xbox only · no PC · "
           "no Online at launch", 15, (90, 80, 66), maxw=640)
     photo(img, d, "keyart.jpg", [684, 16, 1008, 268], (0.42, 0.30))
-    paste_ghost(img, 706, 252, 180)
+    paste_ghost_cutout(img, 688, 258, 124)
     d = ImageDraw.Draw(img)
     d.rounded_rectangle([700, 316, 996, 362], radius=10, fill=(14, 16, 22))
     ctext(d, 848, 323, "LAUNCH STATUS:", 13, SUB, maxw=280)
@@ -259,7 +282,7 @@ def build_g():
     ctext(d, W // 2, 1131,
           "• 7.8M PEAK VIEWERS • WIDOWS OF VICE CITY • CLIPS MISTAKEN FOR "
           "REAL LIFE • 13 YEARS + $2B OF BUGS •", 16, GOLD, maxw=1000)
-    footer(img, 1168)
+    footer(img, 1168, ghost="cutout")
     out = os.path.join(HERE, "meme8.png")
     img.save(out, format="PNG", optimize=True)
     print("wrote", out, img.size, os.path.getsize(out), "bytes")
