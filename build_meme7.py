@@ -125,7 +125,7 @@ def build_k():
 
     # Header band
     d.rectangle([52, 52, W - 52, 200], fill=NAVY)
-    lt(d, 80, 76, "LEONIDA AIR", 62, PAPER, path=SERIF)
+    lt(d, 80, 76, "GATOR AIR", 62, PAPER, path=SERIF)
     lt(d, 82, 150, "WE FLY WHEN IT'S READY", 19, GOLD, path=MONO_R)
     ct(d, 836, 74, "BOARDING", 40, GOLD, maxw=250)
     ct(d, 836, 122, "PASS", 40, GOLD, maxw=250)
@@ -140,7 +140,7 @@ def build_k():
 
     rows = [
         ("PASSENGER", "EVERY GAMER", None),
-        ("FROM", "REAL LIFE", ("TO", "LEONIDA")),
+        ("FROM", "OFFLINE", ("TO", "LEONIDA")),
         ("DEPARTED", "2013 (ANNOUNCED)", ("DELAYS", "2")),
         ("FLIGHT TIME", "13 YEARS", None),
         ("BAGGAGE", "212 GB (ALL OF IT)", None),
@@ -164,7 +164,7 @@ def build_k():
     # Stub fields
     sy = 226
     for label, value in [("FLIGHT", "VI"), ("SEAT", "1A"),
-                         ("CLASS", "PATIENT"), ("GROUP", "13 YRS"),
+                         ("CLASS", "TERMINAL"), ("GROUP", "13 YRS"),
                          ("STATUS", "BOARDED")]:
         lt(d, SX, sy, label, 16, GRAY)
         lt(d, SX, sy + 21, value, 26, NAVY, maxw=SW)
@@ -202,9 +202,9 @@ def build_l():
     # Hospital cross + header
     d.rectangle([90, 52, 110, 128], fill=MAGENTA)
     d.rectangle([74, 78, 126, 102], fill=MAGENTA)
-    ct(d, W // 2 + 30, 56, "LEONIDA GENERAL HOSPITAL", 47, NAVY,
+    ct(d, W // 2 + 30, 56, "LEONIDA MEMORIAL HOSPITAL", 47, NAVY,
        path=SERIF, maxw=830)
-    ct(d, W // 2, 122, "DISCHARGE SUMMARY", 74, NAVY, path=SERIF,
+    ct(d, W // 2, 122, "PATIENT RELEASE NOTES", 74, NAVY, path=SERIF,
        maxw=900)
     ct(d, W // 2, 208, "DEPT. OF TERMINAL HYPE · WARD VI · EST. 2013",
        20, GRAY, path=MONO_R, maxw=800)
@@ -217,7 +217,7 @@ def build_l():
     field(d, MX + 470, y, "ADMITTED", "19 NOV 2026", 426, vsize=36)
     y += 92
     d.line([(MX, y - 14), (960, y - 14)], fill=LINE, width=2)
-    field(d, MX, y, "DIAGNOSIS", "TERMINAL HYPE", MW, vsize=40,
+    field(d, MX, y, "DIAGNOSIS", "END-STAGE HYPE (UNTREATABLE)", MW, vsize=40,
           vcol=MAGENTA)
     y += 96
     d.line([(MX, y - 14), (960, y - 14)], fill=LINE, width=2)
